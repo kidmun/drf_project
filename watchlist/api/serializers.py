@@ -1,28 +1,35 @@
 from wsgiref.validate import validator
 from rest_framework import serializers
-from watchlist.models import Movie
+from watchlist.models import WatchList, StreamPlatform
 
-class MovieSerializer(serializers.ModelSerializer):
-    len_name = serializers.SerializerMethodField()
+class StreamPlatformSerializer(serializers.ModelSerializer):
     
     class Meta:
-        model = Movie
+        model = StreamPlatform
+        fields = "__all__"
+
+
+class WatchListSerializer(serializers.ModelSerializer):
+    # len_name = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = WatchList
         fields = "__all__"
         
-    def get_len_name(self, object):
-        return len(object.name)
+    # def get_len_name(self, object):
+    #     return len(object.name)
     
-    def validate(self, data):
-        if data['name'] == data['description']:
-            raise serializers.ValidationError("name and description must be different")
-        else:
-            return data
-    def validate_name(self, value):
+    # def validate(self, data):
+    #     if data['name'] == data['description']:
+    #         raise serializers.ValidationError("name and description must be different")
+    #     else:
+    #         return data
+    # def validate_name(self, value):
         
-        if len(value) < 2:
-            raise serializers.ValidationError("name is too short")
-        else:
-            return value
+    #     if len(value) < 2:
+    #         raise serializers.ValidationError("name is too short")
+    #     else:
+    #         return value
         
 
 # def name_length(value):
