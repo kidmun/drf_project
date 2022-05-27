@@ -1,6 +1,7 @@
 from operator import mod
 from platform import platform
 from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 class StreamPlatform(models.Model):
     name = models.CharField(max_length=100)
@@ -14,7 +15,7 @@ class WatchList(models.Model):
     
     title = models.CharField(max_length=50)
     story_line = models.CharField(max_length=200)
-    platform = models.ForeignKey(StreamPlatform, on_delete=models.CASCADE, related_name="watchlist")
+    platform = models.ForeignKey(StreamPlatform, on_delete=models.CASCADE, blank=True, null=True, related_name="watchlist")
     active = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
     
@@ -22,4 +23,16 @@ class WatchList(models.Model):
         return self.title
     
 
-# Create your models here.
+
+class Review(models.Model):
+    
+    rating = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)]) 
+    description = models.CharField(max_length=200, null=True)
+    WatchList = models.ForeignKey(WatchList, on_delete=models.CASCADE, related_name="reviews")
+    active = models.BooleanField(default=True)
+    created = models.DateTimeField(auto_now_add=True)
+    update = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return str(self.rating) + "-" + self.WatchList.title
+    # Create your models here.
