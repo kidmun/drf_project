@@ -1,15 +1,26 @@
 from wsgiref.validate import validator
 from rest_framework import serializers
-from watchlist.models import WatchList, StreamPlatform
+from watchlist.models import WatchList, StreamPlatform, Review
 
+class ReviewSerializer(serializers.ModelSerializer):
+    
+    review_user = serializers.StringRelatedField(read_only=True)
+    
+    class Meta:
+        model = Review
+        exclude = ('watchlist',)
+        
+        
 class WatchListSerializer(serializers.ModelSerializer):
+    
+    reviews = ReviewSerializer(many=True, read_only=True)
     # len_name = serializers.SerializerMethodField()
     
     class Meta:
         model = WatchList
         fields = "__all__"
-
-
+        
+        
 class StreamPlatformSerializer(serializers.ModelSerializer):
     # you can see serializer relation documentation
     # watchlist = serializers.SlugRelatedField(
